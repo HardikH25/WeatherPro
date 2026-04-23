@@ -116,7 +116,12 @@ function DailyItem({ day, index }) {
 
 //ticking clock
 function TickingClock({ initialTime }) {
-    const [currentTime, setCurrentTime] = useState(new Date(initialTime.replace(/-/g, '/')));
+    const [currentTime, setCurrentTime] = useState(() => {
+        const date = new Date(initialTime.replace(/-/g, '/'));
+        // Sync seconds with system clock since API only gives HH:mm
+        date.setSeconds(new Date().getSeconds());
+        return date;
+    });
 
     useEffect(() => {
         const timer = setInterval(() => {
