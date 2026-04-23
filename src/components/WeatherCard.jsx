@@ -118,7 +118,7 @@ function DailyItem({ day, index }) {
 function TickingClock({ initialTime }) {
     const [currentTime, setCurrentTime] = useState(() => {
         const date = new Date(initialTime.replace(/-/g, '/'));
-        // Sync seconds with system clock since API only gives HH:mm
+        //api gives hh:mm -> sync seconds with my clock
         date.setSeconds(new Date().getSeconds());
         return date;
     });
