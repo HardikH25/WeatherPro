@@ -59,7 +59,7 @@ function getWeatherIcon(text, size, isDay) {
     if (m.includes('cloud') || m.includes('overcast')) {
         return <Cloud {...props} color="#9ca3af" />;
     }
-    if (!isDay) {
+    if (!isDay && m.includes('clear')) {
         return <Sunset {...props} color="#a78bfa" />;
     }
     return <Sun {...props} color="#fbbf24" />;
