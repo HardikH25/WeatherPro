@@ -23,7 +23,7 @@ function App() {
     try {
       console.log('Fetching weather for:', targetCity);
       const res = await axios.get(
-        `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${encodeURIComponent(targetCity)}&days=7&aqi=yes&alerts=yes`
+        `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${encodeURIComponent(targetCity)}&days=7&aqi=yes&alerts=yes`
       )
       console.log('Weather Data:', res.data);
       setWeather(res.data);
