@@ -42,6 +42,19 @@ function App() {
     fetchWeather(newCity);
   };
 
+  const fetchSuggestions = async (query) => {
+    if (!API_KEY || !query.trim()) return [];
+    try {
+      const res = await axios.get(
+        `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${encodeURIComponent(query)}`
+      );
+      return res.data;
+    } catch (err) {
+      console.error('Suggestions Fetch Error:', err);
+      return [];
+    }
+  };
+
   const isDay = weather?.current?.is_day === 1;
   const condition = weather?.current?.condition?.text?.toLowerCase() ?? '';
 
@@ -77,7 +90,11 @@ function App() {
       )}
 
       {weather && !loading && (
-        <WeatherCard data={weather} onSearch={handleSearch} />
+        <WeatherCard 
+          data={weather} 
+          onSearch={handleSearch} 
+          fetchSuggestions={fetchSuggestions} 
+        />
       )}
     </div>
   );

@@ -144,13 +144,41 @@ function TickingClock({ initialTime }) {
     );
 }
 
-export default function WeatherCard({ data, onSearch }) {
+export default function WeatherCard({ data, onSearch, fetchSuggestions }) {
     const [query, setQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const { location, current, forecast } = data;
+
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (query.trim().length > 2) {
+                const results = await fetchSuggestions(query);
+                setSuggestions(results);
+                setShowSuggestions(true);
+            } else {
+                setSuggestions([]);
+                setShowSuggestions(false);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [query, fetchSuggestions]);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (query.trim()) { onSearch(query.trim()); setQuery(''); }
+        if (query.trim()) {
+            onSearch(query.trim());
+            setQuery('');
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (city) => {
+        onSearch(city);
+        setQuery('');
+        setSuggestions([]);
+        setShowSuggestions(false);
     };
 
     const mainCondition = current?.condition?.text ?? 'Clear';
@@ -181,11 +209,43 @@ export default function WeatherCard({ data, onSearch }) {
             >
                 {/* search & time header */}
                 <div className="card-top-row">
-                    <form className="search-bar" onSubmit={handleSearch}>
-                        <Search size={16} style={{ opacity: 0.4 }} />
-                        <input type="text" className="search-input" placeholder="Search city..." value={query} onChange={(e) => setQuery(e.target.value)} />
-                        <button type="submit" className="search-btn">GO</button>
-                    </form>
+                    <div className="search-container">
+                        <form className="search-bar" onSubmit={handleSearch}>
+                            <Search size={16} style={{ opacity: 0.4 }} />
+                            <input
+                                type="text"
+                                className="search-input"
+                                placeholder="Search city..."
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                            />
+                            <button type="submit" className="search-btn">GO</button>
+                        </form>
+
+                        <AnimatePresence>
+                            {showSuggestions && suggestions.length > 0 && (
+                                <motion.div
+                                    className="suggestions-dropdown"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                >
+                                    {suggestions.map((s) => (
+                                        <div
+                                            key={s.id}
+                                            className="suggestion-item"
+                                            onClick={() => handleSuggestionClick(`${s.name}, ${s.country}`)}
+                                        >
+                                            <span className="suggestion-name">{s.name}</span>
+                                            <span className="suggestion-region">{s.region}, {s.country}</span>
+                                        </div>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                     <TickingClock initialTime={location.localtime} />
                 </div>
 

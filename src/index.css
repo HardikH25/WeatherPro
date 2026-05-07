@@ -325,6 +325,11 @@ body {
   filter: drop-shadow(0 0 30px rgba(255, 200, 80, 0.2));
 }
 
+.search-container {
+  position: relative;
+  z-index: 100;
+}
+
 .search-bar {
   display: flex;
   align-items: center;
@@ -335,6 +340,50 @@ body {
   width: 340px;
   gap: 10px;
   transition: border-color 0.2s;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 25, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.suggestion-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.suggestion-region {
+  font-size: 11px;
+  color: var(--text-dim);
 }
 
 .search-bar:focus-within {
