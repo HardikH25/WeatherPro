@@ -287,7 +287,7 @@ export default function WeatherCard({ data, onSearch, fetchSuggestions }) {
                             {nextHours.map((h, i) => <HourlyItem key={h.time} hour={h} index={i} />)}
                         </div>
 
-                        <div className="section-label">7-Day Forecast</div>
+                        <div className="section-label">Forecast</div>
                         <div className="daily-list">
                             {forecast.forecastday.map((d, i) => <DailyItem key={d.date} day={d} index={i} />)}
                         </div>
